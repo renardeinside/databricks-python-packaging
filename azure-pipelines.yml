@@ -75,20 +75,7 @@ stages:
 
       - script: |
           python -m pip install --upgrade pip
-#          pip install -r unit-requirements.txt
-#          pip install -e .
         displayName: 'Install dependencies'
-#
-#      - script: |
-#          pytest tests/unit --junitxml=test-unit.xml
-#        displayName: 'Run Unit tests'
-#
-#      - task: PublishTestResults@2
-#        condition: succeededOrFailed()
-#        inputs:
-#          testResultsFormat: 'JUnit'
-#          testResultsFiles: '**/test-*.xml'
-#          failTaskOnFailedTests: true
 
       - script: |
           pip install twine
