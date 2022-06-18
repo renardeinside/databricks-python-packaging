@@ -49,3 +49,17 @@ stages:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/test-*.xml'
         failTaskOnFailedTests: true
+
+    - script: |
+        pip wheel -w dist .
+      displayName: 'Create wheel'
+
+    - task: CopyFiles@2
+      inputs:
+        targetFolder: $(Build.ArtifactStagingDirectory)
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'dist'
+        publishLocation: 'Container'
