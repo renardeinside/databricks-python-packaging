@@ -1,0 +1,9 @@
+{
+    "environments": {
+        "default": {
+            "profile": "itrusov-az-dbx",
+            "workspace_dir": "/Shared/dbx/databricks_python_packaging",
+            "artifact_location": "dbfs:/Shared/dbx/projects/databricks_python_packaging"
+        }
+    }
+}

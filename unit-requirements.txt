@@ -1,0 +1,6 @@
+setuptools
+wheel
+pyspark==3.2.1
+pytest
+pytest-cov
+dbx==0.5.0
