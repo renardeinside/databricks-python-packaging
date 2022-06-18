@@ -75,20 +75,20 @@ stages:
 
       - script: |
           python -m pip install --upgrade pip
-          pip install -r unit-requirements.txt
-          pip install -e .
+#          pip install -r unit-requirements.txt
+#          pip install -e .
         displayName: 'Install dependencies'
-
-      - script: |
-          pytest tests/unit --junitxml=test-unit.xml
-        displayName: 'Run Unit tests'
-
-      - task: PublishTestResults@2
-        condition: succeededOrFailed()
-        inputs:
-          testResultsFormat: 'JUnit'
-          testResultsFiles: '**/test-*.xml'
-          failTaskOnFailedTests: true
+#
+#      - script: |
+#          pytest tests/unit --junitxml=test-unit.xml
+#        displayName: 'Run Unit tests'
+#
+#      - task: PublishTestResults@2
+#        condition: succeededOrFailed()
+#        inputs:
+#          testResultsFormat: 'JUnit'
+#          testResultsFiles: '**/test-*.xml'
+#          failTaskOnFailedTests: true
 
       - script: |
           pip wheel -w dist .
@@ -97,7 +97,7 @@ stages:
       - task: TwineAuthenticate@1
         displayName: Twine Authenticate
         inputs:
-          artifactFeed: itrusov-feed
+          artifactFeed: databricks-python-packaging/itrusov-feed
 
       - script: |
           python -m twine upload -r itrusov-feed --config-file $(PYPIRC_PATH) dist/*.whl
