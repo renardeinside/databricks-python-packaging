@@ -14,6 +14,7 @@ trigger:
 
 stages:
 - stage: onPush
+  condition: ne(startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   jobs:
   - job: onPushJob
     pool:
@@ -50,16 +51,57 @@ stages:
         testResultsFiles: '**/test-*.xml'
         failTaskOnFailedTests: true
 
-    - script: |
-        pip wheel -w dist .
-      displayName: 'Create wheel'
 
-    - task: CopyFiles@2
-      inputs:
-        targetFolder: $(Build.ArtifactStagingDirectory)
+- stage: onRelease
+  condition: |
+    or(
+      startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+    )
+  jobs:
+  - job: onReleaseJob
+    pool:
+      vmImage: 'ubuntu-18.04'
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'dist'
-        publishLocation: 'Container'
+    steps:
+      - script: env | sort
+        displayName: 'Environment / Context'
+
+      - task: UsePythonVersion@0
+        displayName: 'Use Python 3.8'
+        inputs:
+          versionSpec: 3.8
+
+      - checkout: self
+        persistCredentials: true
+        clean: true
+        displayName: 'Checkout & Build.Reason: $(Build.Reason) & Build.SourceBranchName: $(Build.SourceBranchName)'
+
+      - script: |
+          python -m pip install --upgrade pip
+          pip install -r unit-requirements.txt
+          pip install -e .
+        displayName: 'Install dependencies'
+
+      - script: |
+          pytest tests/unit --junitxml=test-unit.xml
+        displayName: 'Run Unit tests'
+
+      - task: PublishTestResults@2
+        condition: succeededOrFailed()
+        inputs:
+          testResultsFormat: 'JUnit'
+          testResultsFiles: '**/test-*.xml'
+          failTaskOnFailedTests: true
+
+      - script: |
+          pip wheel -w dist .
+        displayName: Build package
+
+      - task: TwineAuthenticate@1
+        displayName: Twine Authenticate
+        inputs:
+          artifactFeed: itrusov-feed
+
+      - script: |
+          python -m twine upload -r itrusov-feed --config-file $(PYPIRC_PATH) dist/*.whl
+        displayName: Upload to Azure Artifacts
