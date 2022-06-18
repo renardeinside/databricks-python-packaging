@@ -14,7 +14,7 @@ trigger:
 
 stages:
 - stage: onPush
-  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
+  condition: not(startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
   jobs:
   - job: onPushJob
     pool:
