@@ -91,6 +91,7 @@ stages:
 #          failTaskOnFailedTests: true
 
       - script: |
+          pip install twine
           pip wheel -w dist .
         displayName: Build package
 
