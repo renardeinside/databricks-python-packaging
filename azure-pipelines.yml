@@ -53,10 +53,7 @@ stages:
 
 
 - stage: onRelease
-  condition: |
-    or(
-      startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
-    )
+  condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/v')
   jobs:
   - job: onReleaseJob
     pool:
