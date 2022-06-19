@@ -20,9 +20,8 @@ def spark() -> SparkSession:
     """
     logging.info("Configuring Spark session for testing environment")
     warehouse_dir = tempfile.TemporaryDirectory().name
-    _builder = (
-        SparkSession.builder.master("local[1]")
-        .config("spark.hive.metastore.warehouse.dir", Path(warehouse_dir).as_uri())
+    _builder = SparkSession.builder.master("local[1]").config(
+        "spark.hive.metastore.warehouse.dir", Path(warehouse_dir).as_uri()
     )
     spark: SparkSession = _builder.getOrCreate()
     logging.info("Spark session configured")
