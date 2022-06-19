@@ -3,6 +3,7 @@
 Sample Python project which shows how to package, release and use packages in Databricks.
 
 While using this project, you need Python 3.X and `pip` or `conda` for package management.
+Please find the blogpost about this setup [here](https://polarpersonal.medium.com/releasing-and-using-python-packages-with-azure-devops-and-azure-databricks-906ec2ff8e2d).
 
 ## Technologies used
 
